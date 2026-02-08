@@ -57,6 +57,8 @@ class Translator
      */
     public function setLocale($locale, $remember = true)
     {
+	$locale = $this->expandLocale($locale);
+
         if (!Locale::isValid($locale)) {
             return false;
         }
@@ -118,6 +120,20 @@ class Translator
         return false;
     }
 
+	public function expandLocale($locale){
+	        switch($locale) {
+                 case "esp":
+                        $locale = "es"; break;
+               	 case "cat":
+                	$locale = "ct"; break;
+               	 case "eng":
+               	         $locale = "en"; break;
+        	}
+
+		return $locale;
+	}
+
+
     //
     // Request handling
     //
@@ -129,6 +145,7 @@ class Translator
     public function loadLocaleFromRequest()
     {
         $locale = Request::segment(1);
+	$locale = $this->expandLocale($locale);
 
         if (!Locale::isValid($locale)) {
             return false;

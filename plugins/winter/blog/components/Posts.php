@@ -2,17 +2,17 @@
 
 namespace Winter\Blog\Components;
 
-use Backend\Facades\BackendAuth;
+use BackendAuth;
 use Cms\Classes\ComponentBase;
 use Cms\Classes\Page;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Facades\Lang;
-use Illuminate\Support\Facades\Redirect;
+use Lang;
+use Redirect;
 use Winter\Blog\Models\Category as BlogCategory;
 use Winter\Blog\Models\Post as BlogPost;
 use Winter\Blog\Models\Settings as BlogSettings;
 use Winter\Storm\Database\Collection;
-use Winter\Storm\Support\Facades\Event;
+use Winter\Storm\Database\Model;
 
 class Posts extends ComponentBase
 {
@@ -55,7 +55,7 @@ class Posts extends ComponentBase
     {
         return [
             'name'        => 'winter.blog::lang.settings.posts_title',
-            'description' => 'winter.blog::lang.settings.posts_description',
+            'description' => 'winter.blog::lang.settings.posts_description'
         ];
     }
 
@@ -150,20 +150,6 @@ class Posts extends ComponentBase
         return $options;
     }
 
-    public function init()
-    {
-        Event::listen('translate.localePicker.translateParams', function ($page, $params, $oldLocale, $newLocale) {
-            if (isset($params['slug'])) {
-                $newParams = $params;
-                $record = BlogCategory::transWhere('slug', $params['slug'], $oldLocale)->first();
-                if ($record) {
-                    $newParams['slug'] = $record->getAttributeTranslated('slug', $newLocale);
-                    return $newParams;
-                }
-            }
-        });
-    }
-
     public function onRun()
     {
         $this->prepareVars();
@@ -171,26 +157,32 @@ class Posts extends ComponentBase
         $this->category = $this->page['category'] = $this->loadCategory();
         $this->posts = $this->page['posts'] = $this->listPosts();
 
+	$path = trim(request()->getUri(), '/');
+	$langPath = substr($path, strrpos($path, '/')+1);
+
+	switch($langPath) {
+		case "es":
+		        $this->page['langCode'] = "esp"; break;
+                case "ct":
+                        $this->page['langCode'] = "cat"; break;
+                default:
+                        $this->page['langCode'] = "eng";
+	}
+
+	$this->page['langPath'] = $langPath;
+
         /*
          * If the page number is not valid, redirect
          */
         if ($pageNumberParam = $this->paramName('pageNumber')) {
             $currentPage = $this->property('pageNumber');
 
-            // If the page number has not been set, then default to page 1
-            if (!$currentPage) {
-                $this->setProperty('pageNumber', $currentPage = 1);
-            }
-
-            // Page number is not numeric or less than 1, then 404 as this is not a real page
-            if (!is_numeric($currentPage) || $currentPage < 1) {
-                $this->setStatusCode(404);
-                return $this->controller->run('404');
-            }
-
-            // If the current page is bigger than the last page of pagination, then force the user back to the last page
             if ($currentPage > ($lastPage = $this->posts->lastPage()) && $currentPage > 1) {
                 return Redirect::to($this->currentPageUrl([$pageNumberParam => $lastPage]));
+            }
+
+            if (!is_null($currentPage) && $currentPage < 1) {
+                return Redirect::to($this->currentPageUrl([$pageNumberParam => 1]));
             }
         }
     }
@@ -199,7 +191,6 @@ class Posts extends ComponentBase
     {
         $this->pageParam = $this->page['pageParam'] = $this->paramName('pageNumber');
         $this->noPostsMessage = $this->page['noPostsMessage'] = $this->property('noPostsMessage');
-        $this->sortOrder = $this->property('sortOrder');
 
         /*
          * Page links
@@ -236,10 +227,10 @@ class Posts extends ComponentBase
         /*
          * Add a "url" helper attribute for linking to each post and category
          */
-        $posts->each(function ($post) use ($categorySlug) {
+        $posts->each(function($post) use ($categorySlug) {
             $post->setUrl($this->postPage, $this->controller, ['category' => $categorySlug]);
 
-            $post->categories->each(function ($category) {
+            $post->categories->each(function($category) {
                 $category->setUrl($this->categoryPage, $this->controller);
             });
         });
@@ -253,7 +244,7 @@ class Posts extends ComponentBase
             return null;
         }
 
-        $category = new BlogCategory();
+        $category = new BlogCategory;
 
         $category = $category->isClassExtendedWith('Winter.Translate.Behaviors.TranslatableModel')
             ? $category->transWhere('slug', $slug)

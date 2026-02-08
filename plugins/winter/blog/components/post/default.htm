@@ -1,38 +1,40 @@
-{% set post = __SELF__.post %}
+{% set posts = __SELF__.posts %}
 
-<div class="content">{{ post.content_html | raw }}</div>
+<ul class="post-list">
+    {% for post in posts %}
+        <li class="post-list-item">
+		{% if post.featured_images.count %}
+		{% set image = post.featured_images[0] %}
+		<div class="post-image-thumb"
+		     style="background-image: url({{ image.path }});"
+		>
+		</div>
+		{% endif %}
+		<div class="post-announce">
+        	    <h3><a href="/{{ langCode }}/{{ post.categories.first.slug }}/{{ post.slug }}">{{ post.title }}</a></h3>
 
-{% if post.featured_images.count %}
-    <div class="featured-images text-center">
-        {% for image in post.featured_images %}
-            <p>
-                <img
-                    data-src="{{ image.filename }}"
-                    src="{{ image.path }}"
-                    alt="{{ image.description }}"
-                    style="max-width: 100%" />
-            </p>
-        {% endfor %}
-    </div>
-{% endif %}
-
-<p class="info">
-    {% if post.categories.count %}
-        {% set categoryLinks = post.categories | map(c => "<a href=\"#{c.url}\">#{c.name}</a>") | join(', ') %}
-
-        {{ 'winter.blog::lang.post.posted_byline' | trans({
-            date: post.published_at | date('winter.blog::lang.post.date_format' | trans),
-            categories: categoryLinks
-        }) }}
+	            <p class="excerpt">{{ post.summary | raw }}</p>
+		</div>
+        </li>
     {% else %}
-        {{ 'winter.blog::lang.post.posted_byline_no_categories' | trans({
-            date: post.published_at | date('winter.blog::lang.post.date_format'|trans)
-        }) }}
-    {% endif %}
-</p>
+        <li class="no-data">{{ __SELF__.noPostsMessage }}</li>
+    {% endfor %}
+</ul>
 
-{% if post.user %}
-<p class="info">
-    {{ 'winter.blog::lang.post.published_by' | trans }}: {{ post.user.first_name ~ ' ' ~ post.user.last_name }} 
-</p>
+{% if posts.lastPage > 1 %}
+    <ul class="pagination">
+        {% if posts.currentPage > 1 %}
+            <li><a href="{{ this.page.baseFileName | page({ (__SELF__.pageParam): (posts.currentPage-1) }) }}">&larr; Prev</a></li>
+        {% endif %}
+
+        {% for page in 1..posts.lastPage %}
+            <li class="{{ posts.currentPage == page ? 'active' : null }}">
+                <a href="{{ this.page.baseFileName | page({ (__SELF__.pageParam): page }) }}">{{ page }}</a>
+            </li>
+        {% endfor %}
+
+        {% if posts.lastPage > posts.currentPage %}
+            <li><a href="{{ this.page.baseFileName | page({ (__SELF__.pageParam): (posts.currentPage+1) }) }}">Next &rarr;</a></li>
+        {% endif %}
+    </ul>
 {% endif %}

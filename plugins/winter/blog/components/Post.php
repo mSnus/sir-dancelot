@@ -2,11 +2,11 @@
 
 namespace Winter\Blog\Components;
 
-use Backend\Facades\BackendAuth;
+use BackendAuth;
 use Cms\Classes\ComponentBase;
 use Cms\Classes\Page;
+use Event;
 use Winter\Blog\Models\Post as BlogPost;
-use Winter\Storm\Support\Facades\Event;
 
 class Post extends ComponentBase
 {
@@ -24,7 +24,7 @@ class Post extends ComponentBase
     {
         return [
             'name'        => 'winter.blog::lang.settings.post_title',
-            'description' => 'winter.blog::lang.settings.post_description',
+            'description' => 'winter.blog::lang.settings.post_description'
         ];
     }
 
@@ -54,14 +54,17 @@ class Post extends ComponentBase
     public function init()
     {
         Event::listen('translate.localePicker.translateParams', function ($page, $params, $oldLocale, $newLocale) {
+            $newParams = $params;
+
             if (isset($params['slug'])) {
-                $newParams = $params;
-                $record = BlogPost::transWhere('slug', $params['slug'], $oldLocale)->first();
-                if ($record) {
-                    $newParams['slug'] = $record->getAttributeTranslated('slug', $newLocale);
-                    return $newParams;
+                $records = BlogPost::transWhere('slug', $params['slug'], $oldLocale)->first();
+                if ($records) {
+                    $records->translateContext($newLocale);
+                    $newParams['slug'] = $records['slug'];
                 }
             }
+
+            return $newParams;
         });
     }
 
@@ -69,6 +72,21 @@ class Post extends ComponentBase
     {
         $this->categoryPage = $this->page['categoryPage'] = $this->property('categoryPage');
         $this->post = $this->page['post'] = $this->loadPost();
+
+	$path = trim(request()->getUri(), '/');
+        $langPath = substr($path, strpos($path, '.com/')+5, 3);
+
+        switch($langPath) {
+                case "esp":
+                        $this->page['langPath'] = "es"; break;
+                case "cat":
+                        $this->page['langPath'] = "ct"; break;
+                default:
+                        $this->page['langPath'] = "en";
+        }
+
+        $this->page['langCode'] = $langPath;
+
         if (!$this->post) {
             $this->setStatusCode(404);
             return $this->controller->run('404');
@@ -86,7 +104,7 @@ class Post extends ComponentBase
     {
         $slug = $this->property('slug');
 
-        $post = new BlogPost();
+        $post = new BlogPost;
         $query = $post->query();
 
         if ($post->isClassExtendedWith('Winter.Translate.Behaviors.TranslatableModel')) {
@@ -105,7 +123,7 @@ class Post extends ComponentBase
          * Add a "url" helper attribute for linking to each category
          */
         if ($post && $post->exists && $post->categories->count()) {
-            $post->categories->each(function ($category) {
+            $post->categories->each(function($category) {
                 $category->setUrl($this->categoryPage, $this->controller);
             });
         }
@@ -139,7 +157,7 @@ class Post extends ComponentBase
 
         $post->setUrl($postPage, $this->controller);
 
-        $post->categories->each(function ($category) {
+        $post->categories->each(function($category) {
             $category->setUrl($this->categoryPage, $this->controller);
         });
 
