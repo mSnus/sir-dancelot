@@ -1,0 +1,41 @@
+name: 'Main Menu'
+items:
+    -
+        title: Home
+        nesting: ''
+        type: cms-page
+        url: ''
+        code: index
+        reference: index
+        cmsPage: ''
+        replace: ''
+        viewBag:
+            isHidden: '0'
+            cssClass: ''
+            isExternal: '0'
+    -
+        title: Content
+        nesting: '1'
+        type: static-page
+        url: ''
+        code: content
+        reference: content
+        cmsPage: ''
+        replace: '0'
+        viewBag:
+            isHidden: '0'
+            cssClass: ''
+            isExternal: '0'
+    -
+        title: Video
+        nesting: false
+        type: cms-page
+        url: null
+        code: video
+        reference: video
+        cmsPage: null
+        replace: false
+        viewBag:
+            isHidden: '0'
+            cssClass: ''
+            isExternal: '0'

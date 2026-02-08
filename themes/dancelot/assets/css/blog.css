@@ -1,0 +1,57 @@
+:root {
+    --p-width: 60rem;
+}
+
+section#layout-content .content {
+    padding: var(--base-pad);
+    margin: 0 auto;
+}
+
+section#layout-content .content h1,
+section#layout-content .content .h1 {
+    font-size: calc(var(--base-head) * 1.1);
+    line-height: 1.2;
+    color: #486f87;
+    font-family: "Calistoga", serif;
+    font-weight: 400;
+    font-style: normal;
+}
+
+section#layout-content .content h2,
+section#layout-content .content .h2 {
+    font-size: var(--base-head);
+    font-weight: bold;
+    padding-top: var(--base-pad);
+    margin-bottom: var(--base-pad);
+    line-height: 1.1;
+    color: #4887a8;
+    font-family: "Bellota Text", serif;
+    font-weight: 700;
+    font-style: normal;
+}
+
+section#layout-content .content p,
+section#layout-content .content li {
+    font-family: "Bellota Text", serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+    font-size: var(--base-font);
+    color: #162c38;
+    margin-bottom: var(--base-pad);
+}
+
+section#layout-content .content ul {
+    margin-top: var(--base-pad);
+    margin-bottom: var(--base-pad);
+}
+
+section#layout-content .content li {
+    color: #2d6e92;
+    margin-bottom: calc(var(--base-pad) / 2);
+}
+
+section#layout-content .content p {
+    line-height: 1.4;
+    max-width: var(--p-width);
+}

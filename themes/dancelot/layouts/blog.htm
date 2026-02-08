@@ -1,0 +1,91 @@
+description = "blog post"
+
+[blogPost]
+slug = "{{ :slug }}"
+categoryPage = 404
+==
+<?php
+function onEnd()
+{
+    // Optional - set the page title to the post title
+    if ($this->post) {
+        $this->page->title = $this->post->title;
+
+	if ($this->post->featured_images->first()) {
+        	$this->page->og_image = $this->post->featured_images->first()->path;
+        	$this->page->og_title = $this->post->title;
+	}
+    }
+}
+
+?>
+==
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Sir Dancelot - {{ this.page.title }}</title>
+        <meta name="description" content="{{ this.page.meta_description }}">
+        <meta name="title" content="{{ this.page.meta_title }} - Fusion Dance Blog">
+        <meta name="author" content="Sir Dancelot">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="icon" type="image/svg" href="/storage/app/media/knight1.svg">
+
+        <link href="{{ 'assets/css/bootstrap.min.css'|theme }}" rel="stylesheet">
+        <link href="{{ 'assets/css/blog.css'|theme }}" rel="stylesheet">
+        <link href="{{ 'assets/css/snus.css'|theme }}" rel="stylesheet">
+        <link href="{{ 'assets/css/mobile.css'|theme }}" rel="stylesheet">
+        
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bellota+Text:ital,wght@0,400;0,700;1,400&family=Calistoga&display=swap" rel="stylesheet">
+
+{% if this.page.og_image %}
+       <meta property="og:image" content="{{ this.page.og_image }}" />
+{% else %}
+        <meta property="og:image" content="https://sir-dancelot.com/themes/dancelot/assets/images/thumbnail.jpg">
+{% endif %}
+
+{% if this.page.og_title %}
+        <meta property="og:title" content="{{ this.page.og_title }} - Sir Dancelot - Fusion Dance Blog" />
+{% else %}
+        <meta property="og:title" content="Sir Dancelot - Fusion Dance Blog" />
+{% endif %}
+
+        <meta property="og:type" content="article" />
+        <meta property="og:description" content="Fusion Dance thoughts, tips and techniques">
+        <meta property="og:url" content="https://sir-dancelot.com/">
+
+        {% styles %}
+    </head>
+    <body>
+
+        <!-- Header -->
+        <header id="layout-header">
+            {% partial 'site/header2' %}
+        </header>
+
+
+<!-- Content -->
+        <section id="layout-content" class="post-article">
+            {% if post %}
+                {% component 'blogPost' %}
+            {% else %}
+                <h2>Post not found</h2>
+            {% endif %}
+        </section>
+        
+        <!-- Footer -->
+        <footer id="layout-footer">
+            {% partial 'site/footer' %}
+        </footer>
+
+        <!-- Scripts -->
+        <script src="{{ 'assets/vendor/jquery.js'|theme }}"></script>
+        <script src="{{ 'assets/vendor/bootstrap.js'|theme }}"></script>
+        <script src="{{ 'assets/javascript/app.js'|theme }}"></script>
+        {% snowboard all %}
+        {% scripts %}
+
+    </body>
+</html>

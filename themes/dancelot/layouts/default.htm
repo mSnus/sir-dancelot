@@ -1,0 +1,66 @@
+description = "Default layout"
+
+[localePicker]
+forceUrl = 0
+
+[blogPosts]
+pageNumber = "{{ :page }}"
+postsPerPage = 10
+noPostsMessage = "No posts found"
+sortOrder = "published_at desc"
+categoryPage = 404
+postPage = 404
+
+[cookiesBar]
+
+[cookiesManage]
+==
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Sir Dancelot - {{ this.page.title }}</title>
+        <meta name="description" content="{{ this.page.meta_description }}">
+        <meta name="title" content="{{ this.page.meta_title }}">
+        <meta name="author" content="Sir Dancelot">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="icon" type="image/svg" href="/storage/app/media/knight1.svg">
+        <link href="{{ 'assets/css/bootstrap.min.css'|theme }}" rel="stylesheet">
+        <link href="{{ 'assets/css/snus.css'|theme }}" rel="stylesheet">
+        <link href="{{ 'assets/css/mobile.css'|theme }}" rel="stylesheet">
+        
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bellota+Text:ital,wght@0,400;0,700;1,400&family=Calistoga&display=swap" rel="stylesheet">
+
+{% partial 'site/social-meta' %}
+
+        {% styles %}
+    </head>
+    <body>
+{% component 'cookiesBar' %}
+        <!-- Header -->
+        <header id="layout-header">
+            {% partial 'site/header2' %}
+        </header>
+        
+        {% partial 'site/lang' %}        
+
+        <section id="layout-content" class="post-list-container">
+            {% page %}
+        </section>
+        
+        <!-- Footer -->
+        <footer id="layout-footer">
+            {% partial 'site/footer' %}
+        </footer>
+
+        <!-- Scripts -->
+        <script src="{{ 'assets/vendor/jquery.js'|theme }}"></script>
+        <script src="{{ 'assets/vendor/bootstrap.js'|theme }}"></script>
+        <script src="{{ 'assets/javascript/app.js'|theme }}"></script>
+        {% snowboard all %}
+        {% scripts %}
+
+    </body>
+</html>

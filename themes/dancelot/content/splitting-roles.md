@@ -1,0 +1,29 @@
+# Why splitting roles to a leader and a follower
+
+ > In short: because together you could create more and express better.
+
+## Many things are better together
+
+Who said s..? I was about to say "car navigation"! One could do all the necessary operations himself. But if one is only driving, and another is taking care of planning, navigation and entertainment, the long trip becomes easier and more interesting for both.
+
+## Separating tasks
+
+That's why we split roles in dancing: the leader of responsible for planning, safety of both, a picture in a whole. Thus the follower is free from his tasks and about to take care of more detailed decorations and musicality.
+
+It's too complicated to think about all these things at once. Only very experienced and trained dancers could combine or switch roles well. Otherwise it looks and feels awkward in most cases. Sorry.
+
+## Specialized in having fun
+
+More to it, leading and following are special skills that require a lot of training themselves. It's unquestionably great when a dancer understands both role. That really helps to become better in own role.
+
+But it's a kind of specialization - both leading and following contain many, many hidden tricks and details, and require well trained reflexes. And as with any other subject, it takes a lot of time to become a real specialist.
+
+## Exchanging roles
+
+Really experienced dancers could switch roles. This requires a lot of training, especially for switching roles during the dance - obviously, it should be supported by both dancers in a couple. 
+
+When done correctly, it brings the dialogue between them to a fresh new level, making a dance even more pleasant and interesting.
+
+But please remember: it's impossible to become good in both roles before mastering one of them. Playing an not well-known role could be unpleasant or even very traumatic to both. 
+
+I encourage you to try another roles, it's fun and improves the dancing level. But please practice and train well before trying it in a real party.
