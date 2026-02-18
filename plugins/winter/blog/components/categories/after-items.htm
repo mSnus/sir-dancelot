@@ -1,7 +1,10 @@
 {% for category in categories %}
     {% set postCount = category.post_count %}
-    <li class="nav-item" {% if category.slug == currentCategorySlug %}class="active"{% endif %}>
-        <a class="nav-link" href="{{ category.url }}" title="CAT">{{ category.name }}</a> 
+    <li {% if category.slug == currentCategorySlug %}class="active"{% endif %}>
+        <a href="{{ category.url }}">{{ category.name }}</a> 
+        {% if postCount %}
+            <span class="badge">{{ postCount }}</span>
+        {% endif %}
 
         {% if category.children|length > 0 %}
             <ul>

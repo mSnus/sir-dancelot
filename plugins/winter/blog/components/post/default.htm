@@ -1,40 +1,18 @@
-{% set posts = __SELF__.posts %}
+{% set post = __SELF__.post %}
 
-<ul class="post-list">
-    {% for post in posts %}
-        <li class="post-list-item">
-		{% if post.featured_images.count %}
-		{% set image = post.featured_images[0] %}
-		<div class="post-image-thumb"
-		     style="background-image: url({{ image.path }});"
-		>
-		</div>
-		{% endif %}
-		<div class="post-announce">
-        	    <h3><a href="/{{ langCode }}/{{ post.categories.first.slug }}/{{ post.slug }}">{{ post.title }}</a></h3>
+<div class="content">{{ post.content_html | raw }}</div>
 
-	            <p class="excerpt">{{ post.summary | raw }}</p>
-		</div>
-        </li>
-    {% else %}
-        <li class="no-data">{{ __SELF__.noPostsMessage }}</li>
-    {% endfor %}
-</ul>
-
-{% if posts.lastPage > 1 %}
-    <ul class="pagination">
-        {% if posts.currentPage > 1 %}
-            <li><a href="{{ this.page.baseFileName | page({ (__SELF__.pageParam): (posts.currentPage-1) }) }}">&larr; Prev</a></li>
-        {% endif %}
-
-        {% for page in 1..posts.lastPage %}
-            <li class="{{ posts.currentPage == page ? 'active' : null }}">
-                <a href="{{ this.page.baseFileName | page({ (__SELF__.pageParam): page }) }}">{{ page }}</a>
-            </li>
+{% if post.featured_images.count %}
+    <div class="featured-images text-center">
+        {% for image in post.featured_images %}
+            <p>
+                <a href="/"><img
+                    data-src="{{ image.filename }}"
+                    src="{{ image.path }}"
+                    alt="{{ image.description }}"
+                    style="max-width: 100%" />
+		</a>
+            </p>
         {% endfor %}
-
-        {% if posts.lastPage > posts.currentPage %}
-            <li><a href="{{ this.page.baseFileName | page({ (__SELF__.pageParam): (posts.currentPage+1) }) }}">Next &rarr;</a></li>
-        {% endif %}
-    </ul>
+    </div>
 {% endif %}
